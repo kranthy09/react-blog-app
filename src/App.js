@@ -1,13 +1,27 @@
 import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import HomePage from './pages/HomePage';
+import ArticlePage from './pages/ArticlePage';
+import ArticlesListPage from './pages/ArticlesListPage';
+import AboutPage from './pages/AboutPage';
+import NavBar from './NavBar';
 
 function App() {
   return (
-    <div className="App">
-      <h1>My Awesome Blog</h1>
-      <div id="page-body">
-        Welcome to my blog!
+    <BrowserRouter>
+      <div className="App">
+        <NavBar />
+        <div id="page-body">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/articles" element={<ArticlesListPage />} />
+            <Route path="/article/:articleId" element={<ArticlePage />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
+
   );
 }
 
