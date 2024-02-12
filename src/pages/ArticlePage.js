@@ -15,7 +15,9 @@ const ArticlePage = () => {
     console.log(articleId);
     useEffect(() => {
         const loadArticleInfo = async () => {
-            const response = await axios.get(`/api/articles/${articleId}`);
+            const token = user && await user.getIdToken();
+            const headers = token ? { authtoken: token } : {};
+            const response = await axios.get(`/api/articles/${articleId}`, { headers });
             const newArticleInfo = response.data;
             console.log(response.data);
             setArticleInfo(newArticleInfo);
@@ -36,21 +38,21 @@ const ArticlePage = () => {
             <NotFoundPage />
         )
     }
-    console.log(articleInfo);
+    console.log('articleInfo:', articleInfo);
     return (
         <>
             <h1>{article.title}</h1>
             <div className="upvotes-section">
-                { user ?
-                <button onClick={addUpvote}>Upvote</button>
-                : <button>Login</button>}
+                {user ?
+                    <button onClick={addUpvote}>Upvote</button>
+                    : <button>Login</button>}
             </div>
             <p>This article has {articleInfo.upvotes} upvote(s)</p>
             {article.content.map((paragraph, i) => (<p key={i}>{paragraph}</p>))}
-            {user? 
-            <AddCommentForm
-                articleName={articleId}
-                onArticleUpdated={updatedArticle => setArticleInfo(updatedArticle)} />
+            {user ?
+                <AddCommentForm
+                    articleName={articleId}
+                    onArticleUpdated={updatedArticle => setArticleInfo(updatedArticle)} />
                 : <button>Log in to add a comment</button>}
             <CommentsList comments={articleInfo.comments} />
         </>
